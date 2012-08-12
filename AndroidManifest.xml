@@ -1,0 +1,127 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.dinesh.myfirstandroidapp"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15" />
+
+    <supports-screens 
+    android:largeScreens="true" 
+    android:normalScreens="true" 
+    android:smallScreens="true" 
+    android:resizeable="true" 
+    android:anyDensity="true" />
+    
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	 
+	 <!--library-->
+	 <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	 
+	 <!-- GCM connects to Google Services. -->
+	 <uses-permission android:name="android.permission.INTERNET"/>
+	 
+	 <!-- GCM requires a Google account. -->
+	 <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+	 
+	 <!-- Keeps the processor from sleeping when a message is received. -->
+	 <uses-permission android:name="android.permission.WAKE_LOCK"/>
+	 
+	 <!--
+	  Creates a custom permission so only this app can receive its messages.
+	 
+	  NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE,
+	        where PACKAGE is the application's package name.
+	 -->
+	 <permission
+	         android:name="com.dinesh.myfirstandroidapp.permission.C2D_MESSAGE"
+	         android:protectionLevel="signature"/>
+	 <uses-permission
+	         android:name="com.dinesh.myfirstandroidapp.permission.C2D_MESSAGE"/>
+	 
+	 <!-- This app has permission to register and receive data message. -->
+	 <uses-permission
+	         android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:debuggable="true"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:configChanges="orientation|keyboardHidden|screenSize"            
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" 
+             android:launchMode="singleTop" ><!--push notification--> 
+            
+            <!-- Start push notification -->           
+            <intent-filter>
+			   <action android:name="com.dinesh.myfirstandroidapp.MESSAGE" />
+			   <category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<!-- End push notification -->
+			
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+           
+            
+        </activity>
+        <activity android:name="com.dinesh.myfirstandroidapp.DisplayMessageActivity" />
+        
+        <!-- Start push notification -->
+        <activity android:name="com.arellomobile.android.push.PushWebview"/> 
+     	<activity android:name="com.arellomobile.android.push.MessageActivity"/> 
+     	<activity android:name="com.arellomobile.android.push.PushHandlerActivity"/>
+     	
+       <!--
+       BroadcastReceiver that will receive intents from GCM
+       services and handle them to the custom IntentService.
+ 
+       The com.google.android.c2dm.permission.SEND permission is necessary
+       so only GCM services can send data messages for the app.
+     
+     <receiver
+             android:name="com.google.android.gcm.GCMBroadcastReceiver"
+             android:permission="com.google.android.c2dm.permission.SEND">
+         <intent-filter>
+             
+             <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+             
+             <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+             <category android:name="com.dinesh.myfirstandroidapp"/>
+         </intent-filter>
+     </receiver>-->
+        
+     <!-- Start c2dm receiver -->
+     
+     <receiver
+            android:name=".C2DMRegistrationReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter >
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" >
+                </action>
+
+                <category android:name="com.dinesh.myfirstandroidapp.simpleclient" />
+            </intent-filter>
+        </receiver>
+        
+	   <receiver android:name=".C2DMMessageReceiver"
+			android:permission="com.google.android.c2dm.permission.SEND">
+			<intent-filter>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE"></action>
+				<category android:name="com.dinesh.myfirstandroidapp.simpleclient" />
+			</intent-filter>
+		</receiver> 
+
+       <!-- End c2dm receiver -->
+        
+    </application>
+
+	
+</manifest>
